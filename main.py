@@ -104,22 +104,23 @@ def discord_hook():
     
 
 def main():
-    print("retrieving data from School servers...")
-    result = poll_site()
-    text = result
-    result = result.split()
-    
-    start_date = create_date(result[4], int(result[5]))
-    end_date = create_date(result[7], int(result[8].strip(",")))
-    cases = int(result[11])
-    
-    print("Logging data...")
-    log(start_date, end_date, cases, text)
-    print("Sendeding data to discord...")
-    discord_hook()
-    
-    print("waiting for a day...")
-    time.sleep(time_time)
+    while True:
+        print("retrieving data from School servers...")
+        result = poll_site()
+        text = result
+        result = result.split()
+        
+        start_date = create_date(result[4], int(result[5]))
+        end_date = create_date(result[7], int(result[8].strip(",")))
+        cases = int(result[11])
+        
+        print("Logging data...")
+        log(start_date, end_date, cases, text)
+        print("Sendeding data to discord...")
+        discord_hook()
+        
+        print("waiting for a day...")
+        time.sleep(time_time)
 
 
 main()
