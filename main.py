@@ -120,7 +120,7 @@ def main():
         discord_hook()
         
         print("waiting for a day...")
-        time.sleep(time_time)
+        time.sleep(wait_time)
 
 
 main()
