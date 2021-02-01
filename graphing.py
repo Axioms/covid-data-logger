@@ -52,7 +52,7 @@ def graph(data, isState=True):
     else:
         graphType = "School" 
     
-    file_name = date.datetime.now().strftime("%m-%d-%y") + "-" +graphType + ".png"
+    file_name = date.datetime.now().strftime("%m-%d-%y") + "-" + graphType + ".png"
     
     fig.savefig( save_dir + file_name, transparent=True)
     hosting_url = server_address + file_name
