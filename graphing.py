@@ -34,7 +34,8 @@ def graph(data, isState=True):
 
     plt.tick_params(axis='x', which='major', rotation=90)
 
-    ax.set_ylim(0, max(s)+2000)
+    if isState:
+        ax.set_ylim(0, max(s)+2000)
     ax.set_ylabel("New Cases", color="#ffffff")
     ax.tick_params(axis='x', colors='#ffffff')
     ax.tick_params(axis='y', colors='#ffffff')
