@@ -47,7 +47,12 @@ def graph(data, isState=True):
     ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
     ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
 
-    file_name = date.datetime.now().strftime("%m-%d-%y") + ".png"
+    if isState:
+        graphType = "State"
+    else:
+        graphType = "School" 
+    
+    file_name = date.datetime.now().strftime("%m-%d-%y") + "-" +graphType + ".png"
     
     fig.savefig( save_dir + file_name, transparent=True)
     hosting_url = server_address + file_name
