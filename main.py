@@ -100,7 +100,7 @@ def graph(table):
     
     for row in data:
         graphData[0].append(row[0])
-        graphData[1].append(row[1][0:10])
+        graphData[1].append(row[1][5:10])
     
     if table == table_state:
         return graphing.graph(graphData)
@@ -199,8 +199,7 @@ def main():
             discord_state_hook(state_data[3], state_data[0])
         
         print("waiting for a day...")
-        #time.sleep(wait_time)
-        break
+        time.sleep(wait_time)
 
 init_db()
 main()

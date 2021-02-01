@@ -8,6 +8,8 @@ __pycache__/
 
 *.db
 
+*.png
+
 # Distribution / packaging
 .Python
 build/
