@@ -44,8 +44,10 @@ def graph(data, isState=True):
     ax.spines['top'].set_alpha(0.0)
     ax.spines['right'].set_alpha(0.0)
     ax.spines['left'].set_alpha(0.0)
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
-    ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
+    
+    if isState:
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
+        ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
 
     if isState:
         graphType = "State"
