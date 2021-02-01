@@ -95,7 +95,7 @@ def graph(table):
     conn = sqlite3.connect(db)
     c = conn.cursor()
     
-    c.execute("SELECT cases, end FROM " + table + " ORDER BY log ASC")
+    c.execute("SELECT cases, end FROM " + table + " ORDER BY start ASC")
     data = c.fetchall()
     
     for row in data:
