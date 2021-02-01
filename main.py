@@ -1,4 +1,4 @@
-import requests, re, sqlite3, time, os, json
+import requests, re, sqlite3, time, os, json, graphing
 from discord_webhook import DiscordWebhook as wh, DiscordEmbed as Embed
 from dotenv import load_dotenv
 import datetime as date
@@ -7,9 +7,9 @@ load_dotenv()
 db = os.getenv("DB_FILE")
 table_school = os.getenv("TABLE_SCHOOL")
 table_state = os.getenv("TABLE_STATE")
-wait_time = 86400
+wait_time = 3600
 SCHOOL_URL = os.getenv("SCHOOL_URL")
-STATE_URL = os.getenv("STATE_URL")
+STATE_URL = os.getenv("STATE_URL")  
 regex = os.getenv("REGEX")
 webhook_url = os.getenv("WEB_HOOK")
 
@@ -90,17 +90,36 @@ def poll_site():
     result = re.search(regex, page.content.decode('utf-8'))
     return result.group()
 
+def graph(table):
+    graphData = [[],[]]
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    
+    c.execute("SELECT cases, end FROM " + table + " ORDER BY log ASC")
+    data = c.fetchall()
+    
+    for row in data:
+        graphData[0].append(row[0])
+        graphData[1].append(row[1][0:10])
+    
+    if table == table_state:
+        return graphing.graph(graphData)
+    else:
+        return graphing.graph(graphData, False)
+    
+
 def discord_state_hook(data_quality, data_date):
     daily_cases = get_current_cases(table_state)
     total_cases = get_total_cases(table_state)
-    
+    image_url = graph(table_state)
     webhook = wh(url=webhook_url)
     
-    embed = Embed(title='Covid Numbers', description="Data Quality " + data_quality +"\n This data pertains to the day of " + data_date.strftime("%m/%d/%y"), color=242424)
+    embed = Embed(title='Covid Numbers for STATE', description="Data Quality " + data_quality +"\nThis data pertains to the day of " + data_date.strftime("%m/%d/%y"), color=16727078)
     embed.set_author(name='Axiom', url='https://github.com/Axioms', icon_url='https://avatars1.githubusercontent.com/u/15842624?s=400&u=1b28628ffc8782cb9ea538f3ac026af6a218af55&v=4')
     embed.set_timestamp()
     embed.add_embed_field(name='Daily Cases', value=daily_cases)
     embed.add_embed_field(name='Total Cases Since 2021', value=total_cases)
+    embed.set_image(url=image_url)
     
     webhook.add_embed(embed)
     webhook.execute()
@@ -109,15 +128,15 @@ def discord_school_hook():
     weekly_cases = get_current_cases(table_school)
     weekly_text = get_current_text(table_school)
     total_cases = get_total_cases(table_school)
-    
+    image_url = graph(table_school)
     webhook = wh(url=webhook_url)
     
-    embed = Embed(title='Covid Numbers', description=weekly_text, color=242424)
+    embed = Embed(title='Covid Numbers for SCHOOL', description=weekly_text, color=242424)
     embed.set_author(name='Axiom', url='https://github.com/Axioms', icon_url='https://avatars1.githubusercontent.com/u/15842624?s=400&u=1b28628ffc8782cb9ea538f3ac026af6a218af55&v=4')
     embed.set_timestamp()
     embed.add_embed_field(name='Weekly Cases', value=weekly_cases)
     embed.add_embed_field(name='Total Cases Since 2021', value=total_cases)
-    
+    embed.set_image(url=image_url)
     webhook.add_embed(embed)
     webhook.execute()
     
@@ -154,7 +173,7 @@ def get_state_data():
     month = int((json_data["date"]/100)%100)
     day = int(json_data["date"]%100)
     start_date = date.date(year, month, day)
-    cases = json_data["positive"]
+    cases = json_data["positiveIncrease"]
     text = json_data["hash"]
     data_quality = json_data["dataQualityGrade"]
     
@@ -180,7 +199,8 @@ def main():
             discord_state_hook(state_data[3], state_data[0])
         
         print("waiting for a day...")
-        time.sleep(wait_time)
+        #time.sleep(wait_time)
+        break
 
 init_db()
 main()
