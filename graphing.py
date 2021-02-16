@@ -57,6 +57,6 @@ def graph(data, isState=True):
     file_name = date.datetime.now().strftime("%m-%d-%y") + "-" + graphType + ".png"
     
     fig.savefig( save_dir + file_name, transparent=True)
-    hosting_url = server_address + file_name
+    hosting_url = server_address + file_name + "?v=" + date.datetime.now().strftime("%H")
     
     return hosting_url
