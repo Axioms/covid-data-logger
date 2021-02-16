@@ -176,6 +176,8 @@ def get_state_data():
     cases = json_data["positiveIncrease"]
     text = json_data["hash"]
     data_quality = json_data["dataQualityGrade"]
+    if data_quality == None:
+        data_quality = "was not provided"
     
     return (start_date, cases, text, data_quality)
 
@@ -201,5 +203,6 @@ def main():
         print("waiting for a day...")
         time.sleep(wait_time)
 
-init_db()
-main()
+#init_db()
+#main()
+graph(table_state)
